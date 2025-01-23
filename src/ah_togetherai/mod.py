@@ -1,5 +1,5 @@
 import asyncio
-from ..services import service
+from lib.providers.services import service
 from together import AsyncTogether
 import os
 import termcolor
