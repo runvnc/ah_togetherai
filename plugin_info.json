@@ -1,0 +1,6 @@
+{
+  "name": "together.ai",
+  "version": "1.0.0",
+  "description": "together.ai LLM provider",
+  "services": ["stream_chat", "format_image_message"]
+}

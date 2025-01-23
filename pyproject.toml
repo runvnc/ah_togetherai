@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ah_togetherai"
+version = "1.0.0"
+description = "together.ai"
+requires-python = ">=3.7"
+dependencies = ["together", "termcolor"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
