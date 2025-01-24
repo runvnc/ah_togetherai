@@ -34,10 +34,10 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
         async def content_stream(original_stream):
             if model == "deepseek-ai/DeepSeek-R1":
                 yield '[{"reasoning": "'
+            done_reasoning = False
 
             async for chunk in original_stream:
                 try:
-                    done_reasoning = False
                     if os.environ.get('AH_DEBUG') == 'True':
                         try:
                             print('\033[93m' + str(chunk) + '\033[0m', end='')
