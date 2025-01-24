@@ -39,9 +39,9 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                     print('\033[93m' + str(chunk) + '\033[0m', end='')
                     print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
                 if chunk.choices[0].delta.content == None:
-                    continue
+                    pass
                 elif chunk.choices[0].delta.content == "":
-                    continue
+                    pass
                 elif chunk.choices[0].delta.content.contains("</think>"):
                     yield chunk.choices[0].delta.content+ '"}] <<CUT_HERE>>'
                 elif model == "deepseek-ai/DeepSeek-R1":
