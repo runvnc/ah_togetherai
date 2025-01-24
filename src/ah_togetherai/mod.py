@@ -2,6 +2,7 @@ from lib.providers.services import service
 import os
 import base64
 from io import BytesIO
+import json
 from openai import AsyncOpenAI
 
 # Configure OpenAI client to use togetherai's API
@@ -51,7 +52,10 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                     without_quotes = json_str[1:-1]
                     yield without_quotes
                 else:
-                    yield chunk.choices[0].delta.content or ""
+                    if chunk.choices[0].delta.content.startswith("<think>"):
+                        yield chunk.choices[0].delta.content[7:]
+                    else:
+                        yield chunk.choices[0].delta.content or ""
 
         return content_stream(stream)
 
