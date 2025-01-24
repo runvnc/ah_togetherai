@@ -44,12 +44,14 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                             print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
                         except Exception as e:
                             pass
-                    if chunk.choices[0].delta.content == None:
-                        yield ""
-                    elif chunk.choices[0].delta.content == "":
-                        yield ""
+                    if chunk.choices[0].delta.content.startswith("<think>"):
+                        after_think = chunk.choices[0].delta.content.split("<think>")[1]
+                        json_str = json.dumps(after_think)
+                        without_quotes = json_str[1:-1]
+                        yield without_quotes
                     elif "</think>" in chunk.choices[0].delta.content:
-                        json_str = json.dumps(chunk.choices[0].delta.content)
+                        before_think = chunk.choices[0].delta.content.split("</think>")[0]
+                        json_str = json.dumps(before_think)
                         without_quotes = json_str[1:-1]
                         yield without_quotes + '"}] <<CUT_HERE>>'
                         done_reasoning = True
@@ -59,12 +61,9 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                         else:
                             json_str = json.dumps(chunk.choices[0].delta.content)
                             without_quotes = json_str[1:-1]
-                        yield without_quotes
+                            yield without_quotes
                     else:
-                        if chunk.choices[0].delta.content.startswith("<think>"):
-                            yield chunk.choices[0].delta.content[7:]
-                        else:
-                            yield chunk.choices[0].delta.content or ""
+                        yield chunk.choices[0].delta.content or ""
                 except Exception as e:
                     print('togetherai (OpenAI mode) error:', e)
                     yield ""
