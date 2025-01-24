@@ -40,11 +40,11 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                     print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
                 if chunk.choices[0].delta.content == None:
                     continue
-                else if chunk.choices[0].delta.content == "":
+                elif chunk.choices[0].delta.content == "":
                     continue
-                else if chunk.choices[0].delta.content.contains("</think>"):
+                elif chunk.choices[0].delta.content.contains("</think>"):
                     yield chunk.choices[0].delta.content+ '"}] <<CUT_HERE>>'
-                else if model == "deepseek-ai/DeepSeek-R1":
+                elif model == "deepseek-ai/DeepSeek-R1":
                     json_str = json.dumps(chunk.choices[0].delta.content)
                     without_quotes = json_str[1:-1]
                     yield without_quotes
