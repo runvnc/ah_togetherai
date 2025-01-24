@@ -36,29 +36,38 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                 yield '[{"reasoning": "'
 
             async for chunk in original_stream:
-                if os.environ.get('AH_DEBUG') == 'True':
-                    try:
-                        print('\033[93m' + str(chunk) + '\033[0m', end='')
-                        print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
-                    except Exception as e:
-                        pass
-                if chunk.choices[0].delta.content == None:
-                    yield ""
-                elif chunk.choices[0].delta.content == "":
-                    yield ""
-                elif "</think>" in chunk.choices[0].delta.content:
-                    json_str = json.dumps(chunk.choices[0].delta.content)
-                    without_quotes = json_str[1:-1]
-                    yield without_quotes + '"}] <<CUT_HERE>>'
-                elif model == "deepseek-ai/DeepSeek-R1":
-                    json_str = json.dumps(chunk.choices[0].delta.content)
-                    without_quotes = json_str[1:-1]
-                    yield without_quotes
-                else:
-                    if chunk.choices[0].delta.content.startswith("<think>"):
-                        yield chunk.choices[0].delta.content[7:]
+                try:
+                    done_reasoning = False
+                    if os.environ.get('AH_DEBUG') == 'True':
+                        try:
+                            print('\033[93m' + str(chunk) + '\033[0m', end='')
+                            print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
+                        except Exception as e:
+                            pass
+                    if chunk.choices[0].delta.content == None:
+                        yield ""
+                    elif chunk.choices[0].delta.content == "":
+                        yield ""
+                    elif "</think>" in chunk.choices[0].delta.content:
+                        json_str = json.dumps(chunk.choices[0].delta.content)
+                        without_quotes = json_str[1:-1]
+                        yield without_quotes + '"}] <<CUT_HERE>>'
+                        done_reasoning = True
+                    elif model == "deepseek-ai/DeepSeek-R1":
+                        if done_reasoning:
+                            yield chunk.choices[0].delta.content
+                        else:
+                            json_str = json.dumps(chunk.choices[0].delta.content)
+                            without_quotes = json_str[1:-1]
+                        yield without_quotes
                     else:
-                        yield chunk.choices[0].delta.content or ""
+                        if chunk.choices[0].delta.content.startswith("<think>"):
+                            yield chunk.choices[0].delta.content[7:]
+                        else:
+                            yield chunk.choices[0].delta.content or ""
+                except Exception as e:
+                    print('togetherai (OpenAI mode) error:', e)
+                    yield ""
 
         return content_stream(stream)
 
