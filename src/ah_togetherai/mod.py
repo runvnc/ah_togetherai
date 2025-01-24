@@ -30,10 +30,10 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
 
         print("Opened stream with model:", model_name)
         
-        if model == "deepseek-ai/DeepSeek-R1":
-            yield '[{"reasoning": "'
-
         async def content_stream(original_stream):
+            if model == "deepseek-ai/DeepSeek-R1":
+                yield '[{"reasoning": "'
+
             async for chunk in original_stream:
                 if os.environ.get('AH_DEBUG') == 'True':
                     print('\033[93m' + str(chunk) + '\033[0m', end='')
@@ -43,7 +43,9 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                 elif chunk.choices[0].delta.content == "":
                     yield ""
                 elif chunk.choices[0].delta.content.contains("</think>"):
-                    yield chunk.choices[0].delta.content+ '"}] <<CUT_HERE>>'
+                    json_str = json.dumps(chunk.choices[0].delta.content)
+                    without_quotes = json_str[1:-1]
+                    yield without_quotes + '"}] <<CUT_HERE>>'
                 elif model == "deepseek-ai/DeepSeek-R1":
                     json_str = json.dumps(chunk.choices[0].delta.content)
                     without_quotes = json_str[1:-1]
