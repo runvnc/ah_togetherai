@@ -42,7 +42,7 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                     yield ""
                 elif chunk.choices[0].delta.content == "":
                     yield ""
-                elif chunk.choices[0].delta.content.contains("</think>"):
+                elif "</think>" in chunk.choices[0].delta.content:
                     json_str = json.dumps(chunk.choices[0].delta.content)
                     without_quotes = json_str[1:-1]
                     yield without_quotes + '"}] <<CUT_HERE>>'
