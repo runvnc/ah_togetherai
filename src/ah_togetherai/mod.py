@@ -19,7 +19,9 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
         
         # Use env model or default
         model_name = os.environ.get("DEFAULT_LLM_MODEL", "deepseek-ai/DeepSeek-R1")
-        
+        if os.environ.get("LLM_TEMP", 0) != 0:
+            temperature = os.environ.get("LLM_TEMP")
+
         # Create streaming response using OpenAI compatibility layer
         stream = await client.chat.completions.create(
             model=model_name,
