@@ -28,7 +28,7 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
         stream = await client.chat.completions.create(
             model=model_name,
             messages=msgs,
-            repetition_penalty=1.05,
+            frequency_penalty=0.05,
             stream=True,
             temperature=temperature,
             max_tokens=max_tokens
