@@ -4,7 +4,7 @@ import base64
 from io import BytesIO
 import json
 from openai import AsyncOpenAI
-from lib.utils.messages import concat_all_textx
+from lib.utils.messages import concat_all_texts
 
 # Configure OpenAI client to use togetherai's API
 client = AsyncOpenAI(
@@ -22,7 +22,8 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
         model_name = os.environ.get("DEFAULT_LLM_MODEL", "deepseek-ai/DeepSeek-R1")
         if os.environ.get("LLM_TEMP", 0) != 0:
             temperature = float(os.environ.get("LLM_TEMP"))
-        msgs = concat_all_textx(messages)
+
+        msgs = concat_all_texts(messages)
         # Create streaming response using OpenAI compatibility layer
         stream = await client.chat.completions.create(
             model=model_name,
