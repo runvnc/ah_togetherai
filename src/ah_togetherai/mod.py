@@ -71,6 +71,8 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                         yield chunk.choices[0].delta.content or ""
                 except Exception as e:
                     print('togetherai (OpenAI mode) error:', e)
+                    trace = e.__traceback__
+                    print(trace)
                     yield ""
 
         return content_stream(stream)
