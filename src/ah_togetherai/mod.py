@@ -25,6 +25,7 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
             temperature = float(os.environ.get("LLM_TEMP"))
 
         #msgs = concat_all_texts(messages)
+        msgs = messages
         # Create streaming response using OpenAI compatibility layer
         stream = await client.chat.completions.create(
             model=model_name,
