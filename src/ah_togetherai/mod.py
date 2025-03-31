@@ -5,6 +5,7 @@ from io import BytesIO
 import json
 from openai import AsyncOpenAI
 from lib.utils.messages import concat_all_texts
+import traceback
 
 # Configure OpenAI client to use togetherai's API
 client = AsyncOpenAI(
@@ -71,7 +72,7 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                         yield chunk.choices[0].delta.content or ""
                 except Exception as e:
                     print('togetherai (OpenAI mode) error:', e)
-                    trace = e.__traceback__
+                    trace = traceback.format_exc()
                     print(trace)
                     yield ""
 
