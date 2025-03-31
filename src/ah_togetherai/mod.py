@@ -50,6 +50,9 @@ async def stream_chat(model, messages=[], context=None, num_ctx=200000,
                             print('\033[92m' + str(chunk.choices[0].delta.content) + '\033[0m', end='')
                         except Exception as e:
                             pass
+                    if len(chunk.choices) == 0:
+                        yield ""
+                        continue
                     if chunk.choices[0].delta.content.startswith("<think>"):
                         after_think = chunk.choices[0].delta.content.split("<think>")[1]
                         json_str = json.dumps(after_think)
