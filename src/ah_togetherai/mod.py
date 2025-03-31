@@ -15,7 +15,7 @@ client = AsyncOpenAI(
 
 @service()
 async def stream_chat(model, messages=[], context=None, num_ctx=200000, 
-                     temperature=0.3, max_tokens=2000, num_gpu_layers=0):
+                     temperature=0.1, max_tokens=2000, num_gpu_layers=0):
     try:
         print("togetherai stream_chat (OpenAI compatible mode)")
         # Use env model or default
